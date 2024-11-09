@@ -11,9 +11,15 @@ left_door_closed = False
 right_door_closed = False
 
 pygame.init()
+<<<<<<< HEAD
+screen_width = 1920 // 2
+screen_height = 1080 // 2
+screen = pygame.display.set_mode((screen_width, screen_height))
+=======
 screen_width = 1920
 screen_height = 1080
 screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+>>>>>>> ed80eaea0be97e41c3937c81db2d8e8a12a9dd48
 powerPercent = 100
 
 pepsoImage = pygame.image.load("pepso.png")
