@@ -11,18 +11,13 @@ left_door_closed = False
 right_door_closed = False
 
 pygame.init()
-<<<<<<< HEAD
 screen_width = 1920 // 2
 screen_height = 1080 // 2
 screen = pygame.display.set_mode((screen_width, screen_height))
-=======
-screen_width = 1920
-screen_height = 1080
-screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
->>>>>>> ed80eaea0be97e41c3937c81db2d8e8a12a9dd48
 powerPercent = 100
 
 pepsoImage = pygame.image.load("pepso.png")
+fantaImage = pygame.image.load("fanta.png")
 backGround = pygame.image.load("fnaf background.png")
 backGround = pygame.transform.scale(backGround, (screen_width * 1.4, screen_height))
 #pepsoImage = pygame.transform.scale_by(pepsoImage, (0.75, 0.75))
@@ -126,6 +121,31 @@ map[f.x][f.y].append(f)
 #F # F is for fizzy
 #c # c is for coca
 #g #g is guard
+
+class Button(pygame.sprite.Sprite):
+    def _init_(self, size, pos, image):
+        self.size = size
+        self.pos = pos
+        self.image = image
+        self.rect = self.image.get_rect(center = self.pos)
+        self.mouseDown = False
+    def buttonClicked(self):
+        mousePos = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN and not self.mouseDown:
+                if self.rect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0]:
+                    self.toggle = True
+                    self.mouseDown = True
+                    print("clicked")
+            if event.type == pygame.MOUSEBUTTONUP and self.mouseDown:
+                self.mouseDown= False
+    def draw(self):
+        screen.blit(self.image, self.rect)
+    def update(self):
+        self.buttonClicked()
+        self.draw()
+        
+            
 
 clock = pygame.time.Clock()
 
