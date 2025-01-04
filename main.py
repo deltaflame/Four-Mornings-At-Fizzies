@@ -18,6 +18,7 @@ powerPercent = 100
 
 pepsoImage = pygame.image.load("pepso.png")
 fantaImage = pygame.image.load("fanta.png")
+buttonImage = pygame.image.load("redbutton.png")
 backGround = pygame.image.load("fnaf background.png")
 backGround = pygame.transform.scale(backGround, (screen_width * 1.4, screen_height))
 #pepsoImage = pygame.transform.scale_by(pepsoImage, (0.75, 0.75))
@@ -123,7 +124,7 @@ map[f.x][f.y].append(f)
 #g #g is guard
 
 class Button(pygame.sprite.Sprite):
-    def _init_(self, size, pos, image):
+    def __init__(self, size, pos, image):
         self.size = size
         self.pos = pos
         self.image = image
@@ -145,7 +146,7 @@ class Button(pygame.sprite.Sprite):
         self.buttonClicked()
         self.draw()
         
-            
+button = Button(1, (400, 0), buttonImage)
 
 clock = pygame.time.Clock()
 
@@ -168,6 +169,7 @@ while True:
             cls()
             visualize()
     animatronics.update()
+    button.update()
     guardPOV += moveCam(guardPOV)
     screen.blit(backGround, (guardPOV,0))
     screen.blit(pepsoImage, (screen_width//2, screen_height//2))
