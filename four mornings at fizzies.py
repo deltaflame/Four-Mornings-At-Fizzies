@@ -12,13 +12,14 @@ map = []
 directions = ["up", "down", "left", "right"]
 
 pygame.init()
-screen_width = 1920
-screen_height = 1080
-screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+screen_width = 1920 // 2
+screen_height = 1080 // 2
+screen = pygame.display.set_mode((screen_width, screen_height))
 powerPercent = 100
 
-pepsoImage = pygame.image.load("downloads/fmaf/pepso.png")
-backGround = pygame.image.load("downloads/fmaf/fnaf background.png")
+pepsoImage = pygame.image.load("pepso.png")
+fantaImage = pygame.image.load("fanta.png")
+backGround = pygame.image.load("fnaf background.png")
 backGround = pygame.transform.scale(backGround, (screen_width * 1.4, screen_height))
 #pepsoImage = pygame.transform.scale_by(pepsoImage, (0.75, 0.75))
 
@@ -131,6 +132,27 @@ class Button(pygame.sprite.Sprite):
         self.size = size
         self.pos = pos
         self.image = image
+        self.rect = self.image.get_rect(center = self.pos)
+        self.toggle = False
+        self.mouseDown = False
+    def buttonClicked(self):
+        mousePos = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN and not self.mouseDown:
+                if self.rect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0]:
+                    self.toggle = not self.toggle
+                    self.mouseDown = True
+                    print("clicked")
+            if event.type == pygame.MOUSEBUTTONUP and self.mouseDown:
+                self.mouseDown = False
+                print("up")
+    def draw(self):
+        screen.blit(self.image, self.rect)
+    def update(self):
+        self.buttonClicked()
+        self.draw()
+
+test = Button(100, (screen_width // 2, 0), fantaImage)
 
 clock = pygame.time.Clock()
 
@@ -154,6 +176,7 @@ while True:
     guardPOV += moveCam(guardPOV)
     screen.blit(backGround, (guardPOV,0))
     screen.blit(pepsoImage, (screen_width//2, screen_height//2))
+    test.update()
     pygame.display.update()
         
 
