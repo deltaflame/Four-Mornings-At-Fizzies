@@ -18,7 +18,14 @@ powerPercent = 100
 
 pepsoImage = pygame.image.load("pepso.png")
 fantaImage = pygame.image.load("fanta.png")
-buttonImage = pygame.image.load("redbutton.png")
+leftcloseoff = pygame.image.load("left door close, light off.png")
+leftcloseon = pygame.image.load("left door close, light on.png")
+leftopenoff = pygame.image.load("left door open, light off.png")
+leftopenon = pygame.image.load("left door open, light on.png")
+rightcloseoff = pygame.image.load("right door close light on.png")
+rightcloseon = pygame.image.load("right door close, light off.png")
+rightopenoff = pygame.image.load("right door open, light off.png")
+rightopenon = pygame.image.load("right door open, light on.png")
 backGround = pygame.image.load("fnaf background.png")
 backGround = pygame.transform.scale(backGround, (screen_width * 1.4, screen_height))
 #pepsoImage = pygame.transform.scale_by(pepsoImage, (0.75, 0.75))
@@ -147,6 +154,7 @@ class Button(pygame.sprite.Sprite):
             
 
 clock = pygame.time.Clock()
+
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
