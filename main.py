@@ -144,11 +144,15 @@ class Button(pygame.sprite.Sprite):
             self.toggle = True
             Button.mouseDown = True
             print("clicked")
-            
+            return True
+        return False
     def draw(self):
         screen.blit(self.image, self.rect)
     def update(self):
-        self.buttonClicked()
+        global left_door_closed
+        if self.buttonClicked():
+            if self.action == "left":
+                left_door_closed = toggle_left_door(left_door_closed)
         self.draw()
         
             
