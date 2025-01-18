@@ -123,29 +123,26 @@ map[f.x][f.y].append(f)
 #g #g is guard
 
 class Button(pygame.sprite.Sprite):
-    def _init_(self, size, pos, image):
+    mouseDown = False
+    def _init_(self, size, pos, image, action):
         self.size = size
         self.pos = pos
         self.image = image
         self.rect = self.image.get_rect(center = self.pos)
-        self.mouseDown = False
+        self.action = action
     def buttonClicked(self):
         mousePos = pygame.mouse.get_pos()
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN and not self.mouseDown:
-                if self.rect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0]:
-                    self.toggle = True
-                    self.mouseDown = True
-                    print("clicked")
-            if event.type == pygame.MOUSEBUTTONUP and self.mouseDown:
-                self.mouseDown= False
+        if self.rect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] and not Button.mouseDown:
+            self.toggle = True
+            Button.mouseDown = True
+            print("clicked")
+            
     def draw(self):
         screen.blit(self.image, self.rect)
     def update(self):
         self.buttonClicked()
         self.draw()
         
-            
 
 clock = pygame.time.Clock()
 
@@ -160,6 +157,9 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+        if event.type == pygame.MOUSEBUTTONUP and Button.mouseDown:
+            Button.mouseDown= False
+            print("not clicked")
         if event.type == pygame.KEYDOWN:
             if event.key == K_a:
                 left_door_closed = toggle_left_door(left_door_closed)
