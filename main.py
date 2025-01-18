@@ -146,7 +146,7 @@ class Button(pygame.sprite.Sprite):
         self.buttonClicked()
         self.draw()
         
-button = Button(1, (400, 0), buttonImage)
+button = Button(1, (300, 150), buttonImage)
 
 clock = pygame.time.Clock()
 
@@ -169,9 +169,9 @@ while True:
             cls()
             visualize()
     animatronics.update()
-    button.update()
     guardPOV += moveCam(guardPOV)
     screen.blit(backGround, (guardPOV,0))
+    button.update()
     screen.blit(pepsoImage, (screen_width//2, screen_height//2))
     pygame.display.update()
         
