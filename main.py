@@ -18,6 +18,7 @@ powerPercent = 100
 
 pepsoImage = pygame.image.load("pepso.png")
 fantaImage = pygame.image.load("fanta.png")
+buttonImage = pygame.image.load("redbutton.png")
 backGround = pygame.image.load("fnaf background.png")
 backGround = pygame.transform.scale(backGround, (screen_width * 1.4, screen_height))
 #pepsoImage = pygame.transform.scale_by(pepsoImage, (0.75, 0.75))
@@ -143,6 +144,7 @@ class Button(pygame.sprite.Sprite):
         self.buttonClicked()
         self.draw()
         
+            
 
 clock = pygame.time.Clock()
 
