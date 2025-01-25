@@ -18,14 +18,14 @@ powerPercent = 100
 
 pepsoImage = pygame.image.load("pepso.png")
 fantaImage = pygame.image.load("fanta.png")
-leftcloseoff = pygame.image.load("left door close, light off.png")
-leftcloseon = pygame.image.load("left door close, light on.png")
-leftopenoff = pygame.image.load("left door open, light off.png")
-leftopenon = pygame.image.load("left door open, light on.png")
-rightcloseoff = pygame.image.load("right door close light on.png")
-rightcloseon = pygame.image.load("right door close, light off.png")
-rightopenoff = pygame.image.load("right door open, light off.png")
-rightopenon = pygame.image.load("right door open, light on.png")
+leftcloseoff = pygame.image.load("button stuffs/left door close, light off.png")
+leftcloseon = pygame.image.load("button stuffs/left door close, light on.png")
+leftopenoff = pygame.image.load("button stuffs/left door open, light off.png")
+leftopenon = pygame.image.load("button stuffs/left door open, light on.png")
+rightcloseoff = pygame.image.load("button stuffs/right door close, light off.png")
+rightcloseon = pygame.image.load("button stuffs/right door close light on.png")
+rightopenoff = pygame.image.load("button stuffs/right door open, light off.png")
+rightopenon = pygame.image.load("button stuffs/right door open, light on.png")
 backGround = pygame.image.load("fnaf background.png")
 backGround = pygame.transform.scale(backGround, (screen_width * 1.4, screen_height))
 #pepsoImage = pygame.transform.scale_by(pepsoImage, (0.75, 0.75))
@@ -132,32 +132,41 @@ map[f.x][f.y].append(f)
 
 class Button(pygame.sprite.Sprite):
     mouseDown = False
-    def _init_(self, size, pos, image, action):
+    def __init__(self, size, pos, image, toggledImage, action):
         self.size = size
         self.pos = pos
         self.image = image
         self.rect = self.image.get_rect(center = self.pos)
+        self.toggledImage = toggledImage
+        self.toggle = False
         self.action = action
     def buttonClicked(self):
         mousePos = pygame.mouse.get_pos()
         if self.rect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] and not Button.mouseDown:
-            self.toggle = True
+            self.toggle = not self.toggle
             Button.mouseDown = True
             print("clicked")
+            print(self.toggle)
             return True
         return False
     def draw(self):
-        screen.blit(self.image, self.rect)
+        if self.toggle:
+            screen.blit(self.toggledImage, self.rect)
+        else:
+            screen.blit(self.image, self.rect)
     def update(self):
-        global left_door_closed
+        global left_door_closed, right_door_closed
         if self.buttonClicked():
             if self.action == "left":
                 left_door_closed = toggle_left_door(left_door_closed)
+            if self.action == "right":
+                right_door_closed = toggle_right_door(right_door_closed)
         self.draw()
-        
             
 
 clock = pygame.time.Clock()
+leftbutton = Button(1, (250, 250), leftcloseoff, leftcloseon, "left")
+rightbutton = Button(1, (450, 250), rightcloseoff, rightcloseon, "right")
 
 
 def cls():
@@ -185,6 +194,8 @@ while True:
     guardPOV += moveCam(guardPOV)
     screen.blit(backGround, (guardPOV,0))
     screen.blit(pepsoImage, (screen_width//2, screen_height//2))
+    leftbutton.update()
+    rightbutton.update()
     pygame.display.update()
         
 
