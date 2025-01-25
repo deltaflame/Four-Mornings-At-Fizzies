@@ -4,11 +4,14 @@ import os
 
 from pygame.constants import KEYDOWN, K_a, K_d
 #four mornings at fizzys
+# create light buttons and update them properly
 map = []
 directions = ["up", "down", "left", "right"]
 
 left_door_closed = False
 right_door_closed = False
+left_light_on = False
+right_light_on = False
 
 pygame.init()
 screen_width = 1920 // 2
@@ -53,6 +56,10 @@ def toggle_right_door(right_door_closed):
     elif right_door_closed:
         map[4][3] = []
         return False
+def toggle_left_light(left_light_on):
+    return not left_light_on
+def toggle_right_light(right_light_on):
+    return right_light_on
 
 for i in range(5):
     map.append([[], [], [], [], []])
