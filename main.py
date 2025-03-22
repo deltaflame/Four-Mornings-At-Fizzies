@@ -139,41 +139,50 @@ map[f.x][f.y].append(f)
 
 class Button(pygame.sprite.Sprite):
     mouseDown = False
-    def __init__(self, size, pos, image, toggledImage, action):
+    def __init__(self, size, pos, *images, action):
         self.size = size
         self.pos = pos
-        self.image = image
-        self.rect = self.image.get_rect(center = self.pos)
-        self.toggledImage = toggledImage
+        self.images = images
+        self.rect = self.images[0].get_rect(center = self.pos)
+        self.rectTop = self.rect.copy()
+        self.rectTop.height //= 2
+        self.rectBottom = self.rectTop.copy()
+        self.rectBottom.y += self.rectBottom.height
         self.toggle = False
+        self.toggleLight= False
+        self.toggleDoor = False
         self.action = action
     def buttonClicked(self):
         mousePos = pygame.mouse.get_pos()
-        if self.rect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] and not Button.mouseDown:
-            self.toggle = not self.toggle
+        if self.rectTop.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] and not Button.mouseDown:
+            self.toggleDoor = not self.toggleDoor
             Button.mouseDown = True
-            print("clicked")
-            print(self.toggle)
+            return True
+        if self.rectBottom.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] and not Button.mouseDown:
+            self.toggleLight = not self.toggleLight
+            Button.mouseDown = True
             return True
         return False
     def draw(self):
-        if self.toggle:
-            screen.blit(self.toggledImage, self.rect)
-        else:
-            screen.blit(self.image, self.rect)
+        idx = 0
+        if self.toggleDoor:
+            idx += 1
+        if self.toggleLight:
+            idx+= 2
+        screen.blit(self.images[idx], self.rect)
     def update(self):
         global left_door_closed, right_door_closed
-        if self.buttonClicked():
-            if self.action == "left":
-                left_door_closed = toggle_left_door(left_door_closed)
-            if self.action == "right":
-                right_door_closed = toggle_right_door(right_door_closed)
+        self.buttonClicked()
+        if self.action == "left":
+            left_door_closed = toggle_left_door(not self.toggleDoor)
+        if self.action == "right":
+            right_door_closed = toggle_right_door(not self.toggleDoor)
         self.draw()
             
 
 clock = pygame.time.Clock()
-leftbutton = Button(1, (250, 250), leftcloseoff, leftcloseon, "left")
-rightbutton = Button(1, (450, 250), rightcloseoff, rightcloseon, "right")
+leftbutton = Button(1, (250, 250), leftopenoff, leftcloseoff, leftopenon, leftcloseon, action="left")
+rightbutton = Button(1, (450, 250), rightopenoff, rightcloseoff, rightopenon, rightcloseon, action="right")
 
 
 def cls():
@@ -181,7 +190,8 @@ def cls():
 
 while True:
     clock.tick(60)
-    #visualize()
+    visualize()
+    cls()
     #print()
     #input()
     for event in pygame.event.get():
