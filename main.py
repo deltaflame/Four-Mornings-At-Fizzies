@@ -31,6 +31,14 @@ rightopenoff = pygame.image.load("button stuffs/right door open, light off.png")
 rightopenon = pygame.image.load("button stuffs/right door open, light on.png")
 backGround = pygame.image.load("fnaf background.png")
 backGround = pygame.transform.scale(backGround, (screen_width * 1.4, screen_height))
+energy1 = pygame.image.load("energybar/energy1.png")
+energy2 = pygame.image.load("energybar/energy2.png")
+energy3 = pygame.image.load("energybar/energy3.png")
+energy4 = pygame.image.load("energybar/energy4.png")
+energy5 = pygame.image.load("energybar/energy5.png")
+energyBar = [energy1, energy2, energy3, energy4, energy5]
+for i, image in enumerate(energyBar):
+    energyBar[i] = pygame.transform.scale_by(image, (0.5, 0.5))
 #pepsoImage = pygame.transform.scale_by(pepsoImage, (0.75, 0.75))
 #create sprite group, update everything in sprite group in main loop
 animatronics = pygame.sprite.Group()
@@ -188,6 +196,21 @@ rightbutton = Button(1, (450, 250), rightopenoff, rightcloseoff, rightopenon, ri
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
+def displayEnergySystem():
+    energyUsage = 0
+    if leftbutton.toggleLight:
+         energyUsage += 1
+    if leftbutton.toggleDoor:
+         energyUsage += 1
+    if rightbutton.toggleLight:
+         energyUsage += 1
+    if rightbutton.toggleDoor:
+         energyUsage += 1
+    energyUI = energyBar[energyUsage]
+    energyUIpos = energyUI.get_rect(topleft=(0, screen_height-100))
+    screen.blit(energyUI, energyUIpos)
+
+
 while True:
     clock.tick(60)
     visualize()
@@ -211,6 +234,7 @@ while True:
     guardPOV += moveCam(guardPOV)
     screen.blit(backGround, (guardPOV,0))
     screen.blit(pepsoImage, (screen_width//2, screen_height//2))
+    displayEnergySystem()
     leftbutton.update()
     rightbutton.update()
     pygame.display.update()
