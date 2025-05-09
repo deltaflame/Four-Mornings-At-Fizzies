@@ -197,6 +197,7 @@ def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
 def displayEnergySystem():
+    global powerPercent
     energyUsage = 0
     if leftbutton.toggleLight:
          energyUsage += 1
@@ -209,6 +210,13 @@ def displayEnergySystem():
     energyUI = energyBar[energyUsage]
     energyUIpos = energyUI.get_rect(topleft=(0, screen_height-100))
     screen.blit(energyUI, energyUIpos)
+    displayText("PixelifySans-Regular.ttf", 100, str(powerPercent) + "%", (0, screen_height - 200), (255,255,255))
+
+def displayText(font, fontSize, text, pos, color):
+    textFont = pygame.font.Font(font, fontSize)
+    text = textFont.render(text, True, color)
+    textPos = text.get_rect(topleft=pos)
+    screen.blit(text, textPos)
 
 
 while True:
