@@ -31,6 +31,14 @@ rightopenoff = pygame.image.load("button stuffs/right door open, light off.png")
 rightopenon = pygame.image.load("button stuffs/right door open, light on.png")
 backGround = pygame.image.load("fnaf background.png")
 backGround = pygame.transform.scale(backGround, (screen_width * 1.4, screen_height))
+energy1 = pygame.image.load("energybar/energy1.png")
+energy2 = pygame.image.load("energybar/energy2.png")
+energy3 = pygame.image.load("energybar/energy3.png")
+energy4 = pygame.image.load("energybar/energy4.png")
+energy5 = pygame.image.load("energybar/energy5.png")
+energyBar = [energy1, energy2, energy3, energy4, energy5]
+for i, image in enumerate(energyBar):
+    energyBar[i] = pygame.transform.scale_by(image, (0.5, 0.5))
 #pepsoImage = pygame.transform.scale_by(pepsoImage, (0.75, 0.75))
 #create sprite group, update everything in sprite group in main loop
 animatronics = pygame.sprite.Group()
@@ -137,52 +145,84 @@ map[f.x][f.y].append(f)
 #c # c is for coca
 #g #g is guard
 
-class Button(pygame.sprite.Sprite):
+class Button(pygame.sprite.Sprite): # make images an array, door adds + 1, lights adds +2
     mouseDown = False
-    def __init__(self, size, pos, image, toggledImage, action):
+    def __init__(self, size, pos, *images, action):
         self.size = size
         self.pos = pos
-        self.image = image
-        self.rect = self.image.get_rect(center = self.pos)
-        self.toggledImage = toggledImage
+        self.images = images
+        self.rect = self.images[0].get_rect(center = self.pos)
+        self.rectTop = self.rect.copy()
+        self.rectTop.height //= 2
+        self.rectBottom = self.rectTop.copy()
+        self.rectBottom.y += self.rectBottom.height
+        self.toggleDoor = False
+        self.toggleLight = False
         self.toggle = False
         self.action = action
     def buttonClicked(self):
         mousePos = pygame.mouse.get_pos()
-        if self.rect.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] and not Button.mouseDown:
-            self.toggle = not self.toggle
+        if self.rectTop.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] and not Button.mouseDown:
+            self.toggleDoor = not self.toggleDoor
             Button.mouseDown = True
-            print("clicked")
-            print(self.toggle)
+            return True
+        if self.rectBottom.collidepoint(mousePos) and pygame.mouse.get_pressed()[0] and not Button.mouseDown:
+            self.toggleLight = not self.toggleLight
+            Button.mouseDown = True
             return True
         return False
     def draw(self):
-        if self.toggle:
-            screen.blit(self.toggledImage, self.rect)
-        else:
-            screen.blit(self.image, self.rect)
+        idx = 0
+        if self.toggleDoor:
+            idx += 1
+        if self.toggleLight:
+            idx += 2
+        screen.blit(self.images[idx], self.rect)
     def update(self):
         global left_door_closed, right_door_closed
-        if self.buttonClicked():
-            if self.action == "left":
-                left_door_closed = toggle_left_door(left_door_closed)
-            if self.action == "right":
-                right_door_closed = toggle_right_door(right_door_closed)
+        self.buttonClicked()
+        if self.action == "left":
+            left_door_closed = toggle_left_door(not self.toggleDoor)
+        if self.action == "right":
+            right_door_closed = toggle_right_door(not self.toggleDoor)
         self.draw()
             
 
 clock = pygame.time.Clock()
-leftbutton = Button(1, (250, 250), leftcloseoff, leftcloseon, "left")
-rightbutton = Button(1, (450, 250), rightcloseoff, rightcloseon, "right")
+leftbutton = Button(1, (250, 250), leftopenoff, leftcloseoff, leftopenon, leftcloseon, action="left")
+rightbutton = Button(1, (450, 250), rightopenoff, rightcloseoff, rightopenon, rightcloseon, action="right")
 
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
+def displayEnergySystem():
+    global powerPercent
+    energyUsage = 0
+    if leftbutton.toggleLight:
+         energyUsage += 1
+    if leftbutton.toggleDoor:
+         energyUsage += 1
+    if rightbutton.toggleLight:
+         energyUsage += 1
+    if rightbutton.toggleDoor:
+         energyUsage += 1
+    energyUI = energyBar[energyUsage]
+    energyUIpos = energyUI.get_rect(topleft=(0, screen_height-100))
+    screen.blit(energyUI, energyUIpos)
+    displayText("PixelifySans-Regular.ttf", 100, str(powerPercent) + "%", (0, screen_height - 200), (255,255,255))
+
+def displayText(font, fontSize, text, pos, color):
+    textFont = pygame.font.Font(font, fontSize)
+    text = textFont.render(text, True, color)
+    textPos = text.get_rect(topleft=pos)
+    screen.blit(text, textPos)
+
+
 while True:
     clock.tick(60)
-    #visualize()
-    #print()
+    visualize()
+    cls()
     #input()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -201,196 +241,8 @@ while True:
     guardPOV += moveCam(guardPOV)
     screen.blit(backGround, (guardPOV,0))
     screen.blit(pepsoImage, (screen_width//2, screen_height//2))
+    displayEnergySystem()
     leftbutton.update()
     rightbutton.update()
     pygame.display.update()
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
