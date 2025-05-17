@@ -36,12 +36,16 @@ energy2 = pygame.image.load("energybar/energy2.png")
 energy3 = pygame.image.load("energybar/energy3.png")
 energy4 = pygame.image.load("energybar/energy4.png")
 energy5 = pygame.image.load("energybar/energy5.png")
+cameraUp = pygame.image.load("camera/Open Menu.png")
+cameraDown = pygame.image.load("camera/Close Menu.png")
+
 energyBar = [energy1, energy2, energy3, energy4, energy5]
 for i, image in enumerate(energyBar):
     energyBar[i] = pygame.transform.scale_by(image, (0.25, 0.25))
 #pepsoImage = pygame.transform.scale_by(pepsoImage, (0.75, 0.75))
 #create sprite group, update everything in sprite group in main loop
 animatronics = pygame.sprite.Group()
+buttons = pygame.sprite.Group()
 
 def visualize():
     for row in map:
@@ -148,6 +152,7 @@ map[f.x][f.y].append(f)
 class Button(pygame.sprite.Sprite):
     mouseDown = False
     def __init__(self, size, pos, *images, action):
+        super().__init__(buttons)
         self.size = size
         self.pos = pos
         self.images = images
@@ -194,7 +199,7 @@ class Button(pygame.sprite.Sprite):
 clock = pygame.time.Clock()
 leftbutton = Button(1, (250, 250), leftopenoff, leftcloseoff, leftopenon, leftcloseon, action="left")
 rightbutton = Button(1, (450, 250), rightopenoff, rightcloseoff, rightopenon, rightcloseon, action="right")
-
+camera = Button(1, (screen_width-100, screen_height-25), cameraUp, cameraDown, action="camera")
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
@@ -258,8 +263,7 @@ while True:
     screen.blit(pepsoImage, (screen_width//2, screen_height//2))
     displayEnergySystem()
 
-    leftbutton.update()
-    rightbutton.update()
+    buttons.update()
     pygame.display.update()
         
 
